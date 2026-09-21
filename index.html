@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedOut</title>
+<meta name="description" content="LinkedOut is a slot machine that turns everyday moments and business buzzwords into a ready-to-post LinkedIn post. Spin, copy, and pretend you had an epiphany.">
+<meta name="theme-color" content="#FFD028">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="LinkedOut">
+<meta property="og:title" content="LinkedOut">
+<meta property="og:description" content="LinkedOut is a slot machine that turns everyday moments and business buzzwords into a ready-to-post LinkedIn post. Spin, copy, and pretend you had an epiphany.">
+<meta property="og:url" content="https://getlinkedout.com/">
+<meta property="og:image" content="https://getlinkedout.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LinkedOut: a slot machine with reels reading Running out of milk, Lead generation, and The Epiphany">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LinkedOut">
+<meta name="twitter:description" content="LinkedOut is a slot machine that turns everyday moments and business buzzwords into a ready-to-post LinkedIn post. Spin, copy, and pretend you had an epiphany.">
+<meta name="twitter:image" content="https://getlinkedout.com/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23FFD028'/%3E%3Ctext x='32' y='48' font-family='Impact,Arial Black,sans-serif' font-size='46' text-anchor='middle' fill='%23161311'%3EL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    --yellow:#FFD028;
+    --ink:#161311;
+    --ink-2:#3d3320;
+    --paper:#ffffff;
+    --soft:#F6F1E4;
+    --line:#E4DDCB;
+    --mute:#6a6459;
+    --cab:#1a1714;
+    --cab-2:#2a2521;
+    --cab-line:#3d362f;
+    --cab-label:#D9C27A;
+    --red:#D92B1E;
+    --red-d:#9F1C12;
+    --tag:#1d5fb4;
+  }
+  *{box-sizing:border-box;}
+  html{background:var(--yellow);}
+  body{
+    margin:0;
+    background:var(--yellow);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.5;
+    padding-inline:clamp(1rem, 3vw, 2rem);
+    padding-block:clamp(1.25rem, 4vw, 3rem) 1.5rem;
+  }
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .wrap{max-width:1120px;margin:0 auto;}
+  .layout{
+    display:grid;
+    grid-template-columns:minmax(0,460px) minmax(0,1fr);
+    gap:clamp(1.5rem, 4vw, 3rem);
+    align-items:start;
+  }
+  @media (max-width:860px){ .layout{grid-template-columns:minmax(0,1fr);} }
+
+  /* ---------- title ---------- */
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:.74rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin:0 0 .5rem;
+    color:var(--ink-2);
+  }
+  h1{
+    font-family:'Anton', Impact, 'Arial Narrow', sans-serif;
+    font-weight:400;
+    font-size:clamp(3.8rem, 12vw, 6.2rem);
+    line-height:.92;
+    text-transform:uppercase;
+    letter-spacing:.005em;
+    margin:0 0 .7rem;
+    text-wrap:balance;
+  }
+  .tagline{font-size:1.05rem;font-weight:500;margin:0 0 1.4rem;max-width:28ch;}
+
+  /* ---------- machine ---------- */
+  .machine{
+    background:var(--cab);
+    border-radius:22px;
+    padding:1rem 1rem 1.15rem;
+    box-shadow:0 10px 0 rgba(0,0,0,.28);
+    color:#fff;
+  }
+  .lights{
+    height:12px;
+    margin:.15rem .25rem .95rem;
+    background:radial-gradient(circle, var(--yellow) 3px, transparent 3.6px) 0 50%/18px 12px repeat-x;
+    opacity:.95;
+  }
+  .machine.is-spinning .lights{animation:chase .5s steps(2) infinite;}
+  @keyframes chase{0%{opacity:1;}50%{opacity:.3;}100%{opacity:1;}}
+
+  .reels{display:grid;gap:.85rem;}
+  .reel{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"label label" "win hold";
+    gap:.35rem .6rem;
+    align-items:stretch;
+  }
+  .reel-label{
+    grid-area:label;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:.68rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--cab-label);
+  }
+  .reel-window{
+    grid-area:win;
+    position:relative;
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:8px;
+    min-height:4.1rem;
+    padding:.5rem 1.35rem;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    box-shadow:inset 0 7px 9px -7px rgba(0,0,0,.4), inset 0 -7px 9px -7px rgba(0,0,0,.4);
+  }
+  .reel-window::before,.reel-window::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    width:0;height:0;
+    transform:translateY(-50%);
+    border-style:solid;
+  }
+  .reel-window::before{left:0;border-width:7px 0 7px 9px;border-color:transparent transparent transparent var(--red);}
+  .reel-window::after{right:0;border-width:7px 9px 7px 0;border-color:transparent var(--red) transparent transparent;}
+  .reel-text{
+    font-family:'Anton', Impact, 'Arial Narrow', sans-serif;
+    font-size:clamp(1.15rem, 3.4vw, 1.5rem);
+    line-height:1.05;
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    overflow-wrap:anywhere;
+  }
+  .reel-text.spinning{filter:blur(1.1px);opacity:.75;}
+  .reel-text.land{animation:land .3s cubic-bezier(.2,1.6,.4,1);}
+  @keyframes land{from{transform:translateY(-45%);opacity:.3;}to{transform:none;opacity:1;}}
+
+  .hold{
+    grid-area:hold;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:.7rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    min-width:4.4rem;
+    padding:0 .7rem;
+    border-radius:8px;
+    border:1px solid var(--cab-line);
+    background:var(--cab-2);
+    color:var(--cab-label);
+    cursor:pointer;
+  }
+  .hold:hover{border-color:var(--cab-label);}
+  .hold[aria-pressed="true"]{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+
+  .cringe{border:0;margin:1.4rem 0 0;padding:0;min-width:0;}
+  .cringe legend{padding:0;margin-bottom:.4rem;font-family:'IBM Plex Mono', monospace;font-weight:500;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--cab-label);}
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;}
+  .seg label{display:block;cursor:pointer;}
+  .seg input{position:absolute;opacity:0;pointer-events:none;}
+  .seg span{
+    display:block;text-align:center;
+    padding:.55rem .3rem;
+    border-radius:8px;
+    border:1px solid var(--cab-line);
+    background:var(--cab-2);
+    color:#fff;
+    font-size:.86rem;font-weight:600;
+  }
+  .seg label:hover span{border-color:var(--cab-label);}
+  .seg input:checked + span{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+  .seg input:focus-visible + span{outline:3px solid var(--yellow);outline-offset:2px;}
+
+  .spin{
+    width:100%;
+    margin-top:1.2rem;
+    font-family:'Anton', Impact, 'Arial Narrow', sans-serif;
+    font-size:1.9rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:#fff;
+    background:var(--red);
+    border:0;
+    border-radius:14px;
+    padding:.7rem 1rem .6rem;
+    box-shadow:0 6px 0 var(--red-d);
+    cursor:pointer;
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .spin:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 var(--red-d);}
+  .spin:disabled{opacity:.75;cursor:progress;}
+  .spin:focus-visible,.hold:focus-visible,.copy:focus-visible,.about-toggle:focus-visible{outline:3px solid var(--yellow);outline-offset:3px;}
+
+  /* ---------- post ---------- */
+  .post-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:500;
+    font-size:.74rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin:0 0 .5rem;
+    color:var(--ink-2);
+  }
+  .post{
+    background:var(--paper);
+    border:1px solid rgba(0,0,0,.12);
+    border-radius:12px;
+    padding:1.15rem clamp(1rem, 2.5vw, 1.4rem) 1rem;
+    box-shadow:0 10px 0 rgba(0,0,0,.12);
+  }
+  .author{display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;}
+  .avatar{
+    flex:none;width:48px;height:48px;border-radius:50%;
+    background:var(--ink);color:var(--yellow);
+    display:grid;place-items:center;
+    font-family:'Anton', Impact, sans-serif;font-size:1.15rem;letter-spacing:.03em;
+  }
+  .who-block{min-width:0;flex:1;}
+  .who{
+    width:100%;
+    font:600 .98rem/1.3 'IBM Plex Sans', system-ui, sans-serif;
+    color:var(--ink);
+    background:transparent;
+    border:0;
+    border-bottom:1px dotted var(--mute);
+    padding:0 0 1px;
+    border-radius:0;
+  }
+  .who:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+  .headline{margin:.15rem 0 0;font-size:.8rem;color:var(--mute);line-height:1.35;}
+  .when{margin:.1rem 0 0;font-size:.74rem;color:var(--mute);}
+
+  .post-body{
+    font-size:.98rem;
+    line-height:1.58;
+    color:#1b1a17;
+    overflow-wrap:anywhere;
+    min-height:12rem;
+  }
+  .post-body.flash{animation:flash .35s ease-out;}
+  @keyframes flash{from{opacity:.2;}to{opacity:1;}}
+  .post-body .tag{color:var(--tag);font-weight:500;}
+
+  .actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1rem;}
+  .copy{
+    font:600 .88rem/1 'IBM Plex Sans', system-ui, sans-serif;
+    background:var(--ink);color:var(--yellow);
+    border:0;border-radius:8px;
+    padding:.7rem 1.1rem;
+    cursor:pointer;
+  }
+  .copy:hover{background:#2b2622;}
+  .copy-note{font-size:.8rem;color:var(--mute);}
+
+  .stats{
+    margin-top:1rem;padding-top:.75rem;
+    border-top:1px solid var(--line);
+    font-size:.78rem;color:var(--mute);
+    font-variant-numeric:tabular-nums;
+  }
+  .comments{display:grid;gap:.7rem;margin-top:.85rem;}
+  .comment{display:flex;gap:.6rem;align-items:flex-start;}
+  .c-avatar{
+    flex:none;width:34px;height:34px;border-radius:50%;
+    background:var(--soft);color:var(--ink-2);border:1px solid var(--line);
+    display:grid;place-items:center;
+    font-size:.72rem;font-weight:600;
+  }
+  .c-bubble{background:var(--soft);border-radius:10px;padding:.5rem .7rem;min-width:0;}
+  .c-name{font-size:.82rem;font-weight:600;line-height:1.3;}
+  .c-name small{display:block;font-weight:400;color:var(--mute);font-size:.72rem;}
+  .c-text{font-size:.88rem;margin-top:.15rem;overflow-wrap:anywhere;}
+
+  /* ---------- footer ---------- */
+  .foot{text-align:center;margin-top:2.25rem;}
+  .about-toggle{
+    font-family:'IBM Plex Mono', monospace;font-weight:500;
+    font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+    background:none;border:0;color:var(--ink);opacity:.75;cursor:pointer;padding:.3rem .5rem;
+  }
+  .about-toggle:hover{opacity:1;}
+  .foot p{margin:.5rem auto 0;max-width:52ch;font-size:.78rem;color:var(--ink-2);}
+
+  @media (prefers-reduced-motion: reduce){
+    .machine.is-spinning .lights,.reel-text.land,.post-body.flash{animation:none;}
+    .reel-text.spinning{filter:none;opacity:1;}
+    .spin{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="layout">
+
+    <section class="lead" aria-label="Post generator">
+      <p class="eyebrow">LinkedIn post generator</p>
+      <h1>Linked<br>Out</h1>
+      <p class="tagline">Turn any Tuesday into a keynote.</p>
+
+      <div class="machine" id="machine">
+        <div class="lights" aria-hidden="true"></div>
+
+        <div class="reels">
+          <div class="reel">
+            <div class="reel-label" id="lab0">Everyday activity</div>
+            <div class="reel-window" role="img" aria-labelledby="lab0"><div class="reel-text" id="reel0"></div></div>
+            <button type="button" class="hold" id="hold0" aria-pressed="false" aria-label="Hold the everyday activity reel">Hold</button>
+          </div>
+          <div class="reel">
+            <div class="reel-label" id="lab1">Business insight</div>
+            <div class="reel-window" role="img" aria-labelledby="lab1"><div class="reel-text" id="reel1"></div></div>
+            <button type="button" class="hold" id="hold1" aria-pressed="false" aria-label="Hold the business insight reel">Hold</button>
+          </div>
+          <div class="reel">
+            <div class="reel-label" id="lab2">Post style</div>
+            <div class="reel-window" role="img" aria-labelledby="lab2"><div class="reel-text" id="reel2"></div></div>
+            <button type="button" class="hold" id="hold2" aria-pressed="false" aria-label="Hold the post style reel">Hold</button>
+          </div>
+        </div>
+
+
+        <button type="button" class="spin" id="spin">Spin for insight</button>
+
+        <fieldset class="cringe">
+          <legend>Cringe level</legend>
+          <div class="seg">
+            <label><input type="radio" name="cringe" id="cringe1" value="1"><span>Mild</span></label>
+            <label><input type="radio" name="cringe" id="cringe2" value="2" checked><span>Spicy</span></label>
+            <label><input type="radio" name="cringe" id="cringe3" value="3"><span>Unhinged</span></label>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+    <section class="right" aria-label="Your post">
+      <p class="post-label">Your new post</p>
+      <article class="post">
+        <div class="author">
+          <div class="avatar" id="avatar" aria-hidden="true">TB</div>
+          <div class="who-block">
+            <input class="who" id="who" type="text" value="Taylor Brooks" maxlength="40" aria-label="Your name (shown in the preview)" autocomplete="off">
+            <p class="headline">Founder · Speaker · Author · Dog Dad · Helping leaders unlock what's next</p>
+            <p class="when">Just now · Edited</p>
+          </div>
+        </div>
+
+        <div class="post-body" id="postBody"></div>
+
+        <div class="actions">
+          <button type="button" class="copy" id="copy">Copy post</button>
+          <span class="copy-note" id="copyNote" aria-live="polite"></span>
+        </div>
+
+        <div class="stats" id="stats"></div>
+        <div class="comments" id="comments"></div>
+      </article>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <button type="button" id="aboutToggle" class="about-toggle" aria-expanded="false" aria-controls="aboutText">&#9432; About</button>
+    <p id="aboutText" hidden>LinkedOut is independent parody. It is not affiliated with or endorsed by LinkedIn. Every insight is randomly assembled and should be posted responsibly.</p>
+  </footer>
+</div>
+<p class="sr" id="status" role="status"></p>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= DATA ================= */
+
+  // ing = "-ing" form, did = past tense, detail = the mundane moment
+  var ACTIVITIES = [
+    {ing:"blowing my nose", did:"blew my nose", detail:"It took three tissues. I counted."},
+    {ing:"running out of milk", did:"ran out of milk", detail:"I stood at the open fridge for a full 40 seconds."},
+    {ing:"folding laundry", did:"folded laundry", detail:"The fitted sheet defeated me. I thanked it."},
+    {ing:"waiting for the microwave", did:"waited for the microwave", detail:"One minute and forty seconds. No phone. Just me and the hum."},
+    {ing:"stubbing my toe", did:"stubbed my toe", detail:"On a coffee table I've walked past a thousand times."},
+    {ing:"missing the bus", did:"missed the bus", detail:"I watched it pull away. In slow motion. In my mind."},
+    {ing:"untangling my headphones", did:"untangled my headphones", detail:"They were fine when I put them down. They are never fine when I pick them up."},
+    {ing:"losing my keys", did:"lost my keys", detail:"They were in my hand."},
+    {ing:"parallel parking", did:"parallel parked", detail:"Third attempt. Four spectators."},
+    {ing:"burning the toast", did:"burned the toast", detail:"I scraped it over the sink. Then I ate it anyway."},
+    {ing:"hitting snooze", did:"hit snooze", detail:"Twice. Then a third time, out of respect for the first two."},
+    {ing:"Googling how to boil an egg", did:"Googled how to boil an egg", detail:"I have boiled hundreds of eggs. I Googled it anyway."},
+    {ing:"replying all by accident", did:"replied all by accident", detail:"To 400 people. Including the CEO."},
+    {ing:"sitting in traffic", did:"sat in traffic", detail:"Eleven miles. Forty minutes. One podcast."},
+    {ing:"forgetting my password", did:"forgot my password", detail:"I clicked ‘Forgot password’ with the confidence of someone who does this weekly."},
+    {ing:"walking the dog", did:"walked the dog", detail:"He stopped at every single bush. With purpose."},
+    {ing:"washing the dishes", did:"washed the dishes", detail:"Suds up to my elbows. Zero notifications."},
+    {ing:"assembling flat-pack furniture", did:"assembled flat-pack furniture", detail:"There was one screw left over. There is always one screw left over."},
+    {ing:"eating a sandwich", did:"ate a sandwich", detail:"Turkey. Nothing fancy. I chewed slowly."},
+    {ing:"watering my plants", did:"watered my plants", detail:"One of them died. I'm calling it a pivot."},
+    {ing:"opening a stubborn jar", did:"opened a stubborn jar", detail:"I ran it under hot water. I hit it with a spoon. Then a neighbor did it in one twist."},
+    {ing:"holding the door for a stranger", did:"held the door for a stranger", detail:"She said thank you. I said no problem. That was the whole thing."},
+    {ing:"sneezing in a quiet room", did:"sneezed in a quiet room", detail:"Everyone looked. Nobody said bless you."},
+    {ing:"getting a haircut", did:"got a haircut", detail:"I said ‘just a trim.’ She said ‘sure.’ We both knew."},
+    {ing:"brushing my teeth", did:"brushed my teeth", detail:"Two minutes. I timed it. I always time it."},
+    {ing:"taking out the trash", did:"took out the trash", detail:"The bag ripped. Of course the bag ripped."},
+    {ing:"charging my phone", did:"charged my phone", detail:"It was at 1%. It's always at 1%."},
+    {ing:"finding a parking spot", did:"found a parking spot", detail:"Right out front. I didn't trust it."},
+    {ing:"reheating leftover pizza", did:"reheated leftover pizza", detail:"Oven, not microwave. I have standards."},
+    {ing:"getting a paper cut", did:"got a paper cut", detail:"The smallest wound. The loudest ‘ow.’"},
+    {ing:"pumping gas", did:"pumped gas", detail:"$61. For a Tuesday."},
+    {ing:"sitting on hold with customer service", did:"sat on hold with customer service", detail:"Forty-two minutes of the same eight seconds of music."},
+    {ing:"changing a lightbulb", did:"changed a lightbulb", detail:"One person. Zero committees."},
+    {ing:"waiting for the elevator", did:"waited for the elevator", detail:"I pressed the button again. As if that helps."},
+    {ing:"dropping my toast butter-side down", did:"dropped my toast butter-side down", detail:"The laws of physics are undefeated."},
+    {ing:"trying on jeans", did:"tried on jeans", detail:"Two sizes. Neither one lied."},
+    {ing:"making a cup of tea", did:"made a cup of tea", detail:"I let it steep the full four minutes. Patience is a strategy."},
+    {ing:"shoveling snow", did:"shoveled snow", detail:"Then the plow came back and undid all of it."},
+    {ing:"following my GPS into a lake", did:"followed my GPS into a lake", detail:"Okay, almost. It said ‘turn left’ at a lake."},
+    {ing:"cutting an onion", did:"cut an onion", detail:"I cried. Not from sadness. From onion."},
+    {ing:"sitting at a red light", did:"sat at a red light", detail:"Ninety seconds of stillness. In a car. In America."},
+    {ing:"peeling an orange in one piece", did:"peeled an orange in one piece", detail:"Four minutes. I have never been prouder."},
+    {ing:"clipping my nails", did:"clipped my nails", detail:"One flew across the room. It is still out there."},
+    {ing:"texting the wrong person", did:"texted the wrong person", detail:"It said ‘Be there in 5.’ It was meant for my mother."},
+    {ing:"opening a bag of chips", did:"opened a bag of chips", detail:"It exploded. Chips everywhere."},
+    {ing:"waiting at the DMV", did:"waited at the DMV", detail:"Number 84. They were serving number 12."},
+    {ing:"putting on sunscreen", did:"put on sunscreen", detail:"I missed one spot. The spot found me."},
+    {ing:"hanging a picture", did:"hung a picture", detail:"I measured twice. It is still crooked."},
+    {ing:"sniffing the milk", did:"sniffed the milk", detail:"Verdict: probably fine."},
+    {ing:"raking leaves", did:"raked leaves", detail:"The wind had notes."},
+    {ing:"chasing a runaway shopping cart", did:"chased a runaway shopping cart", detail:"I caught it. Nobody clapped."},
+    {ing:"yawning on a video call", did:"yawned on a video call", detail:"Mid-sentence. Camera on."},
+    {ing:"ordering the wrong coffee", did:"ordered the wrong coffee", detail:"Decaf. I found out at 3 p.m."},
+    {ing:"spilling coffee on my shirt", did:"spilled coffee on my shirt", detail:"Right before the big meeting. Naturally."},
+    {ing:"carrying all the groceries in one trip", did:"carried all the groceries in one trip", detail:"Twelve bags. Zero circulation. Zero regrets."},
+    {ing:"singing in the shower", did:"sang in the shower", detail:"The acoustics are excellent. The lyrics are approximate."},
+    {ing:"unloading the dishwasher", did:"unloaded the dishwasher", detail:"Again. It always fills back up."},
+    {ing:"getting a flat tire", did:"got a flat tire", detail:"In the rain. Outside a bakery. There are worse places."},
+    {ing:"trying to pet a cat", did:"tried to pet a cat", detail:"She allowed two seconds. Then she made her point."},
+    {ing:"eating lunch at my desk", did:"ate lunch at my desk", detail:"Salad. Alone. A true leader's lunch."},
+    {ing:"waiting for a page to load", did:"waited for a page to load", detail:"Spinning wheel. Spinning thoughts."},
+    {ing:"sorting the mail", did:"sorted the mail", detail:"Junk. Junk. Junk. Bill. Junk."},
+    {ing:"finding $5 in an old pair of jeans", did:"found $5 in an old pair of jeans", detail:"Free money. Past me was looking out for future me."},
+    {ing:"cleaning out the fridge", did:"cleaned out the fridge", detail:"I found a yogurt from a previous administration."},
+    {ing:"sharpening a pencil", did:"sharpened a pencil", detail:"I don't know why I own a pencil. It felt important."},
+    {ing:"stepping in a puddle", did:"stepped in a puddle", detail:"Sock-deep. Right before a big day."},
+    {ing:"realizing my shirt was on inside out", did:"realized my shirt was on inside out", detail:"I noticed at 4 p.m. Nobody said a word."},
+    {ing:"hearing my own voicemail greeting", did:"heard my own voicemail greeting", detail:"I did not recognize the voice."},
+    {ing:"pressing the crosswalk button", did:"pressed the crosswalk button", detail:"Nine times. It did not work faster."},
+    {ing:"forgetting why I walked into a room", did:"forgot why I walked into a room", detail:"I stood there. The room and I made eye contact."}
+  ];
+
+  // name = the business idea, lesson = the "insight", p = four principles
+  var CONCEPTS = [
+    {name:"lead generation", lesson:"Leads are like sourdough. Ignore them and they die. Feed them and they rise.", p:["Know your ideal customer","Nurture before you pitch","Follow up within 24 hours","Track what actually converts"]},
+    {name:"RevOps efficiencies", lesson:"Every manual handoff is a silent tax on your growth.", p:["Align sales, marketing, and CS","Kill the manual handoffs","Keep one source of truth","Automate the boring stuff"]},
+    {name:"hiring a new FTE", lesson:"Your next hire isn't a cost. It's a bet on your future self.", p:["Define the role before the résumé","Hire slowly","Hire for culture add","Start onboarding before day one"]},
+    {name:"customer retention", lesson:"Acquisition is a sprint. Retention is a marathon. Nobody trains for the marathon.", p:["Onboard like you mean it","Check in before they churn","Listen twice as much as you pitch","Make renewals boring"]},
+    {name:"cold outreach", lesson:"The best cold email is the one that doesn't feel cold.", p:["Personalize the first line","Lead with value","Keep it under 100 words","Follow up, then follow up again"]},
+    {name:"product-market fit", lesson:"You don't find product-market fit. It finds you, usually at 2 a.m.", p:["Talk to customers weekly","Kill features nobody uses","Watch what they do, not what they say","Charge earlier than feels comfortable"]},
+    {name:"stakeholder alignment", lesson:"Alignment isn't agreement. It's everyone pointing at the same whiteboard.", p:["Name the decision-maker","Pre-wire the meeting","Write it down","Revisit it monthly"]},
+    {name:"quarterly OKRs", lesson:"If everything is a priority, nothing is an objective.", p:["Pick three, not thirteen","Make key results measurable","Review weekly","Celebrate the misses too"]},
+    {name:"cross-functional collaboration", lesson:"Silos are just teams that haven't had lunch yet.", p:["Share the roadmap","Sit with another team","Assume good intent","Over-communicate the handoffs"]},
+    {name:"scaling operations", lesson:"What got you here won't get you there. Neither will that spreadsheet.", p:["Document the process","Delegate the decision","Build for 10x","Measure the bottleneck"]},
+    {name:"pipeline hygiene", lesson:"A dirty pipeline is a lying pipeline.", p:["Close out dead deals","Update the stage, always","Set next steps on every opportunity","Audit weekly"]},
+    {name:"sales enablement", lesson:"Give your reps the playbook, the tools, and the snacks.", p:["Train before you set quota","Make the content findable","Record the best calls","Ask reps what's broken"]},
+    {name:"employee engagement", lesson:"Engagement isn't a pizza party. It's being heard.", p:["Ask, then act","Recognize in public","Protect focus time","Say thank you specifically"]},
+    {name:"change management", lesson:"People don't resist change. They resist being changed.", p:["Explain the why","Start with a pilot","Name a champion","Listen to the skeptics"]},
+    {name:"data-driven decision making", lesson:"In God we trust. All others must bring a dashboard.", p:["Define the metric first","Question the source","Look at trends, not snapshots","Still use your gut"]},
+    {name:"customer discovery", lesson:"The best insights come from shutting up.", p:["Ask open questions","Talk to ten, not two","Listen for pain, not features","Write down their exact words"]},
+    {name:"personal branding", lesson:"Your brand is what people say when you leave the room. Or the Zoom.", p:["Post consistently","Be specific","Tell the real story","Engage before you broadcast"]},
+    {name:"thought leadership", lesson:"Thought leadership is having a thought and then leading. Mostly the first part.", p:["Have a take","Show your work","Credit others","Post the thing"]},
+    {name:"agile transformation", lesson:"Be agile. Also, please stop calling it a sprint if it lasts a quarter.", p:["Ship small","Run honest retros","Limit work in progress","Kill the status meeting"]},
+    {name:"supply chain resilience", lesson:"Resilience is having a plan B. And a plan C. And a guy.", p:["Diversify suppliers","Map your dependencies","Hold a buffer","Test the backup"]},
+    {name:"upskilling your team", lesson:"Your team's growth is your growth.", p:["Budget the time, not just the money","Pair juniors with seniors","Reward curiosity","Learn in public"]},
+    {name:"async communication", lesson:"This meeting could have been a Loom.", p:["Write it down","Set response windows","Default to public channels","Record the demo"]},
+    {name:"building in public", lesson:"Build in public. Fail in public. Post about failing in public.", p:["Share the numbers","Share the misses","Reply to everyone","Ship weekly"]},
+    {name:"fundraising", lesson:"Investors don't fund ideas. They fund conviction and slides.", p:["Know your number","Tell one clear story","Talk to twenty, close three","Never run out of runway"]},
+    {name:"pricing strategy", lesson:"If nobody complains about your price, it's too low.", p:["Anchor high","Price on value, not cost","Test it","Don't discount out of fear"]},
+    {name:"brand storytelling", lesson:"People forget facts. They remember a founder crying in a parking lot.", p:["Lead with the customer","Use real moments","Keep it simple","Stay consistent"]},
+    {name:"customer success", lesson:"Success is when your customer wins. Not when your dashboard is green.", p:["Define success together","Show up before the renewal","Escalate early","Celebrate their wins"]},
+    {name:"vendor management", lesson:"Every vendor is a relationship. Every relationship needs a QBR.", p:["Set clear SLAs","Review quarterly","Negotiate at renewal","Keep a backup"]},
+    {name:"process optimization", lesson:"If you can't draw the process, you can't fix the process.", p:["Map the steps","Find the bottleneck","Cut what doesn't add value","Measure again"]},
+    {name:"psychological safety", lesson:"Safety isn't softness. It's saying ‘I don't know’ out loud.", p:["Model vulnerability","Thank the messenger","Separate blame from learning","Ask the quiet ones"]},
+    {name:"delegation", lesson:"You can't do everything. But you can pretend for a very long time.", p:["Delegate outcomes, not tasks","Trust, then verify","Let them fail small","Say what good looks like"]},
+    {name:"managing up", lesson:"Your boss is a customer with a title.", p:["Bring solutions","Over-communicate progress","Learn their priorities","Never surprise them"]},
+    {name:"remote-first culture", lesson:"Culture isn't the ping-pong table. It's the Slack emoji.", p:["Write everything down","Overlap a few hours","Meet in person sometimes","Default to trust"]},
+    {name:"unit economics", lesson:"Growth is vanity. Margin is sanity. Cash is reality.", p:["Know your CAC","Know your LTV","Watch payback period","Cut unprofitable segments"]},
+    {name:"demand forecasting", lesson:"Forecasting is educated guessing with a nicer font.", p:["Use real history","Update monthly","Plan for a range","Blame the seasonality"]},
+    {name:"go-to-market strategy", lesson:"A great product with no GTM is a very expensive hobby.", p:["Pick a beachhead","Nail the messaging","Sequence the channels","Align the launch"]},
+    {name:"account-based marketing", lesson:"Stop shouting at everyone. Start whispering to the right ones.", p:["Choose your top accounts","Personalize everything","Coordinate with sales","Measure engagement, not clicks"]},
+    {name:"CRM adoption", lesson:"A CRM nobody updates is a very expensive address book.", p:["Make it easy","Show the why","Lead by example","Clean the fields"]},
+    {name:"standard operating procedures", lesson:"Documentation is love. Send love.", p:["Write it once","Keep it short","Assign an owner","Review it twice a year"]},
+    {name:"cash flow management", lesson:"Profit is an opinion. Cash is a fact.", p:["Invoice fast","Collect faster","Forecast weekly","Keep a reserve"]},
+    {name:"strategic partnerships", lesson:"Partnerships are relationships with a legal team.", p:["Find shared customers","Start small","Define the win for both sides","Check in often"]},
+    {name:"content marketing", lesson:"Content is king. Distribution is the kingdom.", p:["Know your audience","Repurpose everything","Be genuinely useful","Publish consistently"]},
+    {name:"A/B testing", lesson:"Test everything. Especially your assumptions.", p:["Change one thing","Wait for significance","Write the hypothesis first","Ship the winner"]},
+    {name:"customer feedback loops", lesson:"Feedback is a gift. Some gifts come with a return receipt.", p:["Ask often","Close the loop","Tag by theme","Act on the top three"]},
+    {name:"burnout prevention", lesson:"Rest is productive. Ask any laptop.", p:["Protect the calendar","Take the vacation","Model boundaries","Check in on people, not tasks"]},
+    {name:"the 80/20 rule", lesson:"80% of results come from 20% of efforts. 100% of posts come from 0% of sleep.", p:["Find the vital few","Say no to the rest","Do the hard thing first","Review what to cut"]},
+    {name:"innovation culture", lesson:"Innovation is just curiosity with a budget.", p:["Reward experiments","Make failure cheap","Give people time to explore","Share the learnings"]},
+    {name:"servant leadership", lesson:"The best leaders eat last. Or at least offer the good chair.", p:["Remove blockers","Give credit away","Listen first","Serve the team"]},
+    {name:"accountability", lesson:"Accountability isn't blame. It's follow-through with a calendar invite.", p:["Name an owner","Set a date","Check in publicly","Own the miss"]},
+    {name:"continuous improvement", lesson:"1% better every day. Or at least, not 1% worse.", p:["Small changes compound","Run a retro every week","Measure the trend","Celebrate the tiny wins"]},
+    {name:"employer branding", lesson:"Your careers page is a first date.", p:["Tell the real story","Let employees speak","Respond to reviews","Show the day-to-day"]},
+    {name:"talent retention", lesson:"People don't leave jobs. They leave managers. And sometimes Mondays.", p:["Pay fairly","Grow your people","Listen in one-on-ones","Fix the manager"]},
+    {name:"workflow automation", lesson:"If you do it twice, automate it. If you do it three times, write a post.", p:["Map the workflow","Start with the boring part","Test before you trust","Keep a human in the loop"]},
+    {name:"negotiation", lesson:"The best deal is the one where both sides feel slightly uncomfortable.", p:["Know your walk-away","Listen more","Anchor first","Trade, don't give"]},
+    {name:"synergy", lesson:"Synergy is when 1 + 1 = 2, but with a kickoff meeting.", p:["Find the overlap","Share the credit","Align the incentives","Circle back"]},
+    {name:"crisis communications", lesson:"Say it fast. Say it true. Say it once.", p:["Own it early","Be transparent","Pick one spokesperson","Follow up"]},
+    {name:"customer onboarding", lesson:"First impressions are 90% of retention. I made that up, but it feels true.", p:["Set expectations","Get to value fast","Assign a human","Celebrate first wins"]},
+    {name:"sales forecasting", lesson:"A forecast is a promise to your future self.", p:["Weight by stage","Inspect the deals","Call the slippage early","Trust the data, not the optimism"]},
+    {name:"lean operations", lesson:"Waste is anything the customer wouldn't pay for. Including that meeting.", p:["Map the value stream","Cut the waste","Pull, don't push","Fix it at the source"]}
+  ];
+
+  var EXTRAS = ["Show up.","Stay humble.","Trust the process.","Hustle.","Be the change."];
+  var TAG_POOL = ["#Leadership","#Growth","#Mindset","#ThoughtLeadership","#Grateful","#Hustle","#Success","#Innovation","#Humbled","#Networking","#Motivation","#Entrepreneurship"];
+
+  var NAMES = [
+    {n:"Brenda Alignment", h:"Chief Vibes Officer"},
+    {n:"Chad Pipeline", h:"Growth Ninja"},
+    {n:"Priya Synergy", h:"Empowering Empowerers"},
+    {n:"Todd Bandwidth", h:"Serial Entrepreneur | Dad"},
+    {n:"Dana Leverage", h:"Disruptor in Residence"},
+    {n:"Marcus Roadmap", h:"Thought Leader"},
+    {n:"Kelsey Touchpoint", h:"Storyteller | Connector"}
+  ];
+  var COMMENTS = [
+    "Love this! So true. 🙌",
+    "This. So much this.",
+    "Needed this today. Thank you for sharing!",
+    "Congrats!!! 🎉",
+    "Saving this for my team.",
+    "Couldn't agree more.",
+    "Love the vulnerability here.",
+    "Great insights! Following for more.",
+    "Wow. Just wow.",
+    "This is the content I'm here for.",
+    "Would love to connect!",
+    "Let's grab coffee and chat about this!",
+    "Absolutely. Sharing with my network."
+  ];
+
+  /* ================= HELPERS ================= */
+
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function num(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+  function shuffle(a){
+    var r=a.slice(), i, j, t;
+    for(i=r.length-1;i>0;i--){ j=Math.floor(Math.random()*(i+1)); t=r[i]; r[i]=r[j]; r[j]=t; }
+    return r;
+  }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  function strip(s){ return s.replace(/[.!?]+$/,""); }
+  function titleCase(s){ return s.replace(/^the\s+/i,"").split(" ").map(cap).join(" "); }
+  function hashtag(s){ return "#"+s.replace(/^the\s+/i,"").split(/[^A-Za-z0-9]+/).filter(Boolean).map(cap).join(""); }
+  function commas(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,","); }
+  function initials(s){
+    var w=s.trim().split(/\s+/).filter(Boolean);
+    if(!w.length) return "?";
+    return (w[0].charAt(0)+(w.length>1?w[w.length-1].charAt(0):"")).toUpperCase();
+  }
+  function pickDifferent(list, current){
+    if(list.length<2) return list[0];
+    var x; do{ x=pick(list); }while(x===current);
+    return x;
+  }
+
+  /* ================= POST BUILDING ================= */
+
+  function ctx(A, C, lvl){
+    var their=function(s){ return s.replace(/\bmy\b/g,"their"); };
+    return {
+      A:A, C:C, lvl:lvl,
+      ing:A.ing, Ing:cap(A.ing), did:A.did,
+      didT:their(A.did), ingT:their(A.ing),
+      name:C.name, Name:cap(C.name), TName:titleCase(C.name)
+    };
+  }
+
+  function mark(x, i){ return x.lvl===1 ? (i+1)+"." : (x.lvl===2 ? "✅" : "👉"); }
+
+  var CONNS = [
+    function(x){ return "Just like "+x.ing+"."; },
+    function(x){ return "I learned that while "+x.ing+"."; },
+    function(x){ return x.Ing+" doesn't lie."; },
+    function(x){ return "(Yes, "+x.ing+" taught me this.)"; },
+    function(){ return "Nobody talks about this."; },
+    function(x){ return "I felt this while "+x.ing+"."; }
+  ];
+
+  function closer(x){
+    var l1=["Thoughts?","Agree?","What do you think?"];
+    var l2=["Agree? 👇","Thoughts? Drop them below. 👇","Tag someone who needs to hear this.","What's your version of this story? Tell me below. 👇"];
+    var ps=[
+      "P.S. We're hiring. Link in comments.",
+      "P.S. Comment INSIGHT and I'll send you my free "+x.name+" playbook.",
+      "P.S. Yes, I "+x.did+" again today.",
+      "P.S. My newsletter drops Friday. Join 40,000 leaders."
+    ];
+    if(x.lvl===1) return [pick(l1)];
+    if(x.lvl===2) return [pick(l2)];
+    return [pick(l2), "♻️ Repost to help your network.", "Follow me for more "+x.name+" insights. 🚀", pick(ps)];
+  }
+
+  function tags(x){
+    var n = x.lvl===1 ? 3 : (x.lvl===2 ? 4 : 6);
+    return [hashtag(x.C.name)].concat(shuffle(TAG_POOL).slice(0,n-1)).join(" ");
+  }
+
+  function assemble(parts){
+    return parts.filter(function(p){ return p && p.length; })
+      .map(function(p){ return Array.isArray(p) ? p.join("\n") : p; })
+      .join("\n\n");
+  }
+
+  function finish(list, x){ return assemble(list.concat(closer(x)).concat([tags(x)])); }
+
+  var FORMATS = [
+    {name:"The Epiphany", build:function(x){
+      var hooks=[
+        x.Ing+" taught me more about "+x.name+" than my MBA ever did.",
+        "I was "+x.ing+" when it hit me.",
+        "Nobody talks about what "+x.ing+" can teach you about "+x.name+".",
+        "Last week I "+x.did+". This week I'm rethinking my entire approach to "+x.name+".",
+        "I "+x.did+" yesterday. It changed how I think about "+x.name+".",
+        "Stop scrolling. This is about "+x.ing+". And "+x.name+".",
+        "Every great leader I know has one thing in common. They've all spent time "+x.ingT+"."
+      ];
+      var hook=(x.lvl>=3?"🚨 ":"")+pick(hooks);
+      return finish([hook, x.A.detail, pick(["And then it hit me.","Then it hit me.","And in that moment, everything clicked."]), x.C.lesson], x);
+    }},
+    {name:"The Listicle", build:function(x){
+      var n=pick([3,4,5]);
+      var items=shuffle(x.C.p).slice(0,Math.min(n,4));
+      var conns=shuffle(CONNS);
+      var lines=items.map(function(p,i){
+        return mark(x,i)+" "+strip(p)+". "+conns[i%conns.length](x);
+      });
+      if(n===5) lines.push(mark(x,lines.length)+" "+pick(EXTRAS));
+      var title=lines.length+" lessons "+x.ing+" taught me about "+x.name+":"+(x.lvl>=2?" 👇":"");
+      return finish([title].concat(lines), x);
+    }},
+    {name:"The Humble Announcement", build:function(x){
+      var ps=shuffle(x.C.p).slice(0,3).map(function(p,i){ return mark(x,i)+" "+strip(p)+"."; });
+      return finish([
+        "I'm humbled to share some news."+(x.lvl>=3?" 🚀":""),
+        "After "+x.ing+" for what felt like the hundredth time, I finally understood "+x.name+".",
+        "So today, I'm launching a new framework: The "+x.TName+" Method™.",
+        "It's built on three principles:",
+        ps,
+        "Link in comments. (Yes, it's free. For now.)",
+        "Thank you to everyone who believed in me. Especially the people who didn't. You know who you are."
+      ], x);
+    }},
+    {name:"The Comeback Story", build:function(x){
+      return finish([
+        "I was laid off "+num(2,5)+" years ago.",
+        "I went home. I "+x.did+".",
+        x.A.detail,
+        "That's when I finally understood "+x.name+".",
+        x.C.lesson,
+        "Today I lead a team of "+num(12,140)+".",
+        "Never stop "+x.ing+"."
+      ], x);
+    }},
+    {name:"The Kid Said It", build:function(x){
+      return finish([
+        "My kid walked in while I was "+x.ing+".",
+        "“What are you doing?” they asked.",
+        "I paused.",
+        "“Thinking about "+x.name+",” I said.",
+        "They shrugged and left.",
+        "Kids get it. We overcomplicate it.",
+        x.C.lesson
+      ], x);
+    }},
+    {name:"The Hot Take", build:function(x){
+      return finish([
+        "Unpopular opinion:",
+        x.Ing+" is the most underrated "+x.name+" strategy.",
+        "Let me explain.",
+        x.A.detail,
+        x.C.lesson
+      ], x);
+    }},
+    {name:"The Hiring Story", build:function(x){
+      return finish([
+        "I once interviewed a candidate who told me they "+x.didT+" that morning.",
+        "I hired them on the spot.",
+        "Why?",
+        "Because they understood something most leaders miss:",
+        x.C.lesson,
+        cap(x.ingT)+" isn't just "+x.ingT+". It's "+x.name+"."
+      ], x);
+    }},
+    {name:"The Thread", build:function(x){
+      var ps=shuffle(x.C.p).slice(0,4), conns=shuffle(CONNS);
+      var lines=ps.map(function(p,i){ return (i+2)+"/ "+strip(p)+". "+conns[i%conns.length](x); });
+      return finish(
+        ["1/ "+x.Ing+" taught me about "+x.name+". Let's dive in."+(x.lvl>=2?" 🧵":"")]
+          .concat(lines)
+          .concat([(ps.length+2)+"/ TL;DR: "+x.C.lesson, "If you found this useful, repost the first post and follow me for more."]),
+        x);
+    }},
+    {name:"The Gratitude Post", build:function(x){
+      return finish([
+        "Grateful. Humbled. Exhausted.",
+        "Today I "+x.did+".",
+        x.A.detail,
+        "And somehow, it made me a better leader.",
+        x.C.lesson,
+        "To everyone who supported me on this journey: thank you."
+      ], x);
+    }},
+    {name:"The One-Liner Cascade", build:function(x){
+      return finish([
+        ["I "+x.did+".","Nobody clapped.","Nobody noticed.","But I learned something."],
+        x.C.lesson,
+        ["Every.","Single.","Time."]
+      ], x);
+    }},
+    {name:"The Poll", build:function(x){
+      var opts=shuffle(["A strong morning routine","Coffee","Vibes","Delegating","Grit","Alignment"]).slice(0,2);
+      return assemble([
+        "Quick poll for my network.",
+        "What matters more for "+x.name+"?",
+        ["A) "+x.Ing,"B) "+opts[0],"C) "+opts[1],"D) All of the above"],
+        "Vote below. Results in 48 hours."+(x.lvl>=2?" 👇":""),
+        "(There are no wrong answers. But A is correct.)",
+        tags(x)
+      ]);
+    }}
+  ];
+
+  /* ================= UI ================= */
+
+  var el = function(id){ return document.getElementById(id); };
+  var reelEls = [el("reel0"), el("reel1"), el("reel2")];
+  var holdEls = [el("hold0"), el("hold1"), el("hold2")];
+  var machine = el("machine"), spinBtn = el("spin"), postBody = el("postBody");
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  var held = [false,false,false];
+  var busy = false;
+  var currentText = "";
+
+  function findActivity(ing){ for(var i=0;i<ACTIVITIES.length;i++){ if(ACTIVITIES[i].ing===ing) return ACTIVITIES[i]; } return ACTIVITIES[0]; }
+  function findConcept(name){ for(var i=0;i<CONCEPTS.length;i++){ if(CONCEPTS[i].name===name) return CONCEPTS[i]; } return CONCEPTS[0]; }
+
+  // a curated first roll so the page opens with a good example
+  var state = { A:findActivity("running out of milk"), C:findConcept("lead generation"), F:FORMATS[0] };
+
+  function labelFor(i, s){
+    if(i===0) return cap(s.A.ing);
+    if(i===1) return cap(s.C.name);
+    return s.F.name;
+  }
+  function randomLabel(i){
+    if(i===0) return cap(pick(ACTIVITIES).ing);
+    if(i===1) return cap(pick(CONCEPTS).name);
+    return pick(FORMATS).name;
+  }
+
+  function level(){
+    var r=document.querySelector('input[name="cringe"]:checked');
+    return r ? parseInt(r.value,10) : 2;
+  }
+
+  function showReels(s, animate){
+    for(var i=0;i<3;i++){
+      reelEls[i].textContent = labelFor(i, s);
+      if(animate){
+        reelEls[i].classList.remove("land");
+        void reelEls[i].offsetWidth;
+        reelEls[i].classList.add("land");
+      }
+    }
+  }
+
+  function spinReel(i, finalText, duration){
+    return new Promise(function(resolve){
+      var node=reelEls[i], start=Date.now();
+      function tick(){
+        var t=Date.now()-start;
+        if(t>=duration){
+          node.classList.remove("spinning");
+          node.textContent=finalText;
+          node.classList.remove("land"); void node.offsetWidth; node.classList.add("land");
+          resolve();
+          return;
+        }
+        node.classList.add("spinning");
+        node.textContent=randomLabel(i);
+        setTimeout(tick, 60 + (t/duration)*130);
+      }
+      tick();
+    });
+  }
+
+  function renderPostText(text){
+    postBody.textContent="";
+    var lines=text.split("\n");
+    for(var i=0;i<lines.length;i++){
+      var parts=lines[i].split(/(#\w+)/);
+      for(var j=0;j<parts.length;j++){
+        if(!parts[j]) continue;
+        if(/^#\w+$/.test(parts[j])){
+          var s=document.createElement("span"); s.className="tag"; s.textContent=parts[j]; postBody.appendChild(s);
+        } else {
+          postBody.appendChild(document.createTextNode(parts[j]));
+        }
+      }
+      if(i<lines.length-1) postBody.appendChild(document.createElement("br"));
+    }
+  }
+
+  function renderEngagement(){
+    el("stats").textContent = commas(num(300,9500))+" reactions · "+commas(num(30,900))+" comments · "+commas(num(8,420))+" reposts";
+    var box=el("comments"); box.textContent="";
+    var people=shuffle(NAMES).slice(0,2), texts=shuffle(COMMENTS).slice(0,2);
+    for(var i=0;i<2;i++){
+      var row=document.createElement("div"); row.className="comment";
+      var av=document.createElement("div"); av.className="c-avatar"; av.setAttribute("aria-hidden","true"); av.textContent=initials(people[i].n);
+      var bub=document.createElement("div"); bub.className="c-bubble";
+      var nm=document.createElement("div"); nm.className="c-name"; nm.textContent=people[i].n;
+      var sm=document.createElement("small"); sm.textContent=people[i].h; nm.appendChild(sm);
+      var tx=document.createElement("div"); tx.className="c-text"; tx.textContent=texts[i];
+      bub.appendChild(nm); bub.appendChild(tx); row.appendChild(av); row.appendChild(bub); box.appendChild(row);
+    }
+  }
+
+  function renderPost(){
+    currentText = state.F.build(ctx(state.A, state.C, level()));
+    renderPostText(currentText);
+    postBody.classList.remove("flash"); void postBody.offsetWidth; postBody.classList.add("flash");
+    renderEngagement();
+    el("copyNote").textContent="";
+    el("copy").textContent="Copy post";
+  }
+
+  function spin(){
+    if(busy) return;
+    busy=true;
+    spinBtn.disabled=true; spinBtn.textContent="Spinning…";
+    machine.classList.add("is-spinning");
+
+    var next={A:state.A, C:state.C, F:state.F};
+    if(!held[0]) next.A=pickDifferent(ACTIVITIES, state.A);
+    if(!held[1]) next.C=pickDifferent(CONCEPTS, state.C);
+    if(!held[2]) next.F=pickDifferent(FORMATS, state.F);
+
+    var times=reduce ? [0,0,0] : [900,1400,1900];
+    var jobs=[0,1,2].map(function(i){
+      if(held[i]) return Promise.resolve();
+      if(reduce){ reelEls[i].textContent=labelFor(i,next); return Promise.resolve(); }
+      return spinReel(i, labelFor(i,next), times[i]);
+    });
+
+    Promise.all(jobs).then(function(){
+      state=next;
+      showReels(state,false);
+      renderPost();
+      machine.classList.remove("is-spinning");
+      spinBtn.disabled=false; spinBtn.textContent="Spin for insight";
+      el("status").textContent="New post ready.";
+      busy=false;
+    });
+  }
+
+  function copyText(t){
+    if(navigator.clipboard && window.isSecureContext){ return navigator.clipboard.writeText(t); }
+    return new Promise(function(resolve,reject){
+      var ta=document.createElement("textarea");
+      ta.value=t; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      var ok=false; try{ ok=document.execCommand("copy"); }catch(e){}
+      document.body.removeChild(ta);
+      ok ? resolve() : reject();
+    });
+  }
+  function selectPost(){
+    var r=document.createRange(); r.selectNodeContents(postBody);
+    var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  el("copy").addEventListener("click", function(){
+    copyText(currentText).then(function(){
+      el("copy").textContent="Copied";
+      el("copyNote").textContent="Now paste it and wait for the congratulations.";
+    }, function(){
+      selectPost();
+      el("copyNote").textContent="Text selected. Press Ctrl+C (or Cmd+C) to copy.";
+    });
+  });
+
+  spinBtn.addEventListener("click", spin);
+  holdEls.forEach(function(b,i){
+    b.addEventListener("click", function(){
+      held[i]=!held[i];
+      b.setAttribute("aria-pressed", String(held[i]));
+      b.textContent = held[i] ? "Held" : "Hold";
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="cringe"]'), function(r){
+    r.addEventListener("change", function(){ if(!busy) renderPost(); });
+  });
+
+  // name box (remembered on this device only)
+  var who=el("who");
+  function syncAvatar(){ el("avatar").textContent=initials(who.value); }
+  try{ var saved=window.localStorage.getItem("tls-name"); if(saved){ who.value=saved; } }catch(e){}
+  who.addEventListener("input", function(){
+    syncAvatar();
+    try{ window.localStorage.setItem("tls-name", who.value); }catch(e){}
+  });
+  syncAvatar();
+
+  var aboutToggle=el("aboutToggle"), aboutText=el("aboutText");
+  aboutToggle.addEventListener("click", function(){
+    var wasHidden=aboutText.hidden;
+    aboutText.hidden=!wasHidden;
+    aboutToggle.setAttribute("aria-expanded", String(wasHidden));
+  });
+
+  // expose the builder so the wording can be checked from the console
+  window.TLS = { ACTIVITIES:ACTIVITIES, CONCEPTS:CONCEPTS, FORMATS:FORMATS, ctx:ctx };
+
+  showReels(state,false);
+  renderPost();
+})();
+</script>
+</body>
+</html>
